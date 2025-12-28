@@ -1,5 +1,5 @@
 --[[
-    Universal UI Library (Ultimate Edition)
+    RenLib UI Library (Ultimate Edition)
     Build: 2.0.0-Release
     Author: Antigravity
     License: MIT
@@ -313,7 +313,7 @@ function Library:CreateWindow(options)
         ActiveTab = nil
     }
 
-    function Window:AddTab(options)
+    function Window:CreateTab(options)
         options = options or {}
         local Name = options.Name or "Tab"
         local Icon = options.Icon or "rbxassetid://4483345998"
@@ -430,7 +430,7 @@ function Library:CreateWindow(options)
         end)
 
         -- Add Section Function
-        function Tab:AddSection(options)
+        function Tab:CreateSection(options)
             options = options or {}
             local SectionName = options.Name or "Section"
             
@@ -481,7 +481,7 @@ function Library:CreateWindow(options)
             end)
             
             --// COMPONENT: Button
-            function Section:AddButton(options)
+            function Section:CreateButton(options)
                 options = options or {}
                 local ButtonName = options.Name or "Button"
                 local Callback = options.Callback or function() end
@@ -532,7 +532,7 @@ function Library:CreateWindow(options)
             end
             
             --// COMPONENT: Toggle
-            function Section:AddToggle(options)
+            function Section:CreateToggle(options)
                 options = options or {}
                 local ToggleName = options.Name or "Toggle"
                 local Default = options.Default or false
@@ -612,7 +612,7 @@ function Library:CreateWindow(options)
             end
             
             --// COMPONENT: Slider
-            function Section:AddSlider(options)
+            function Section:CreateSlider(options)
                 options = options or {}
                 local SliderName = options.Name or "Slider"
                 local Min = options.Min or 0
@@ -718,7 +718,7 @@ function Library:CreateWindow(options)
             end
             
             --// COMPONENT: Dropdown (Simple version, expandable)
-            function Section:AddDropdown(options)
+            function Section:CreateDropdown(options)
                 options = options or {}
                 local DropdownName = options.Name or "Dropdown"
                 local List = options.Values or {}
@@ -855,7 +855,7 @@ function Library:CreateWindow(options)
             end
 
             --// COMPONENT: ColorPicker
-            function Section:AddColorPicker(options)
+            function Section:CreateColorPicker(options)
                 options = options or {}
                 local Name = options.Name or "ColorPicker"
                 local Default = options.Default or Color3.fromRGB(255, 0, 0)
@@ -956,7 +956,7 @@ function Library:CreateWindow(options)
             end
 
             --// COMPONENT: Keybind
-            function Section:AddKeybind(options)
+            function Section:CreateKeybind(options)
                 options = options or {}
                 local Name = options.Name or "Keybind"
                 local Default = options.Default or Enum.KeyCode.RightShift
