@@ -1,45 +1,36 @@
 local function LoadLibrary()
-    -- Configuration: Update this URL to point to your raw GitHub file
     local GithubURL = "https://raw.githubusercontent.com/renardiusse/RenLib/main/RenLib.lua"
-
+    
+    -- Attempt 1: GitHub
     local success, result = pcall(function()
         return game:HttpGet(GithubURL)
     end)
     
-    if not success then
-        warn("CRITICAL: Failed to fetch library from GitHub.")
-        warn("Error:", result)
-        warn("URL:", GithubURL)
-        return nil
-    end
-
-    if type(result) ~= "string" then
-        warn("CRITICAL: GitHub response is not a string.")
-        warn("Type received:", type(result))
-        warn("Value:", tostring(result))
-        return nil
-    end
-    
-    if #result < 100 then
-        warn("WARNING: Fetched file seems too short (" .. #result .. " bytes). Check the URL.")
-        print("First 50 chars:", result:sub(1, 50))
-    end
-
-    local chunk, syntaxErr = loadstring(result)
-    if not chunk then
-        warn("CRITICAL: Syntax Error in Library!")
-        warn(syntaxErr)
-        return nil
+    if success and type(result) == "string" and #result > 100 then
+        print("Success: Loaded RenLib from GitHub.")
+        local chunk, err = loadstring(result)
+        if chunk then
+            return chunk()
+        else
+            warn("GitHub Load Error (Syntax):", err)
+        end
+    else
+        warn("GitHub Load Failed. Status:", success)
+        warn("Result/Error:", result)
+        warn("URL might be wrong. Falling back to local file.")
     end
     
-    local runSuccess, libOrErr = pcall(chunk)
-    if not runSuccess then
-        warn("CRITICAL: Library Runtime Error!")
-        warn(libOrErr)
-        return nil
+    -- Attempt 2: Local File
+    if isfile("RenLib.lua") then
+        print("Fallback: Loading local RenLib.lua...")
+        return loadfile("RenLib.lua")()
+    elseif isfile("RobloxUILib/RenLib.lua") then
+        print("Fallback: Loading local RobloxUILib/RenLib.lua...")
+        return loadfile("RobloxUILib/RenLib.lua")()
     end
-
-    return libOrErr
+    
+    warn("CRITICAL: RenLib not found on GitHub or locally!")
+    return nil
 end
 
 local Library = LoadLibrary()
