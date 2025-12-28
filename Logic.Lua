@@ -1,20 +1,24 @@
-
 local function LoadLibrary()
+    -- Configuration: Update this URL to point to your raw GitHub file
+    local GithubURL = "https://raw.githubusercontent.com/renardiusse/RenLib/main/RenLib.lua"
+
     local success, result = pcall(function()
-        if isfile("RobloxUILib/RenLib.lua") then
-            return loadfile("RobloxUILib/RenLib.lua")()
-        elseif isfile("RenLib.lua") then
-            return loadfile("RenLib.lua")()
-        else
-            error("RenLib.lua not found in workspace!")
-        end
+        return game:HttpGet(GithubURL)
     end)
     
     if not success then
-        warn("Failed to load RenLib:", result)
+        warn("Failed to fetch library from GitHub:", result)
+        warn("URL:", GithubURL)
         return nil
     end
-    return result
+
+    local loadSuccess, libraryOrError = pcall(loadstring(result))
+    if not loadSuccess then
+        warn("Failed to compile library:", libraryOrError)
+        return nil
+    end
+
+    return libraryOrError()
 end
 
 local Library = LoadLibrary()
