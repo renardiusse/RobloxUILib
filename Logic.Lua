@@ -7,22 +7,46 @@ local function LoadLibrary()
     end)
     
     if not success then
-        warn("Failed to fetch library from GitHub:", result)
+        warn("CRITICAL: Failed to fetch library from GitHub.")
+        warn("Error:", result)
         warn("URL:", GithubURL)
         return nil
     end
 
-    local loadSuccess, libraryOrError = pcall(loadstring(result))
-    if not loadSuccess then
-        warn("Failed to compile library:", libraryOrError)
+    if type(result) ~= "string" then
+        warn("CRITICAL: GitHub response is not a string.")
+        warn("Type received:", type(result))
+        warn("Value:", tostring(result))
+        return nil
+    end
+    
+    if #result < 100 then
+        warn("WARNING: Fetched file seems too short (" .. #result .. " bytes). Check the URL.")
+        print("First 50 chars:", result:sub(1, 50))
+    end
+
+    local chunk, syntaxErr = loadstring(result)
+    if not chunk then
+        warn("CRITICAL: Syntax Error in Library!")
+        warn(syntaxErr)
+        return nil
+    end
+    
+    local runSuccess, libOrErr = pcall(chunk)
+    if not runSuccess then
+        warn("CRITICAL: Library Runtime Error!")
+        warn(libOrErr)
         return nil
     end
 
-    return libraryOrError()
+    return libOrErr
 end
 
 local Library = LoadLibrary()
-if not Library then return end
+if not Library then 
+    warn("Library failed to load. Script execution stopped.")
+    return 
+end
 
 local Window = Library:CreateWindow({
     Name = "RenLib Hub | v2.0"
