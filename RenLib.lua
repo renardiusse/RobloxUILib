@@ -1598,12 +1598,13 @@ function Library:CreateWindow(options)
         }
     end
 
-
-
+    -- End of CreateSection
     return Section
 end
+    -- End of CreateTab
     return Tab
 end
+    -- End of CreateWindow
     return Window
 end
 
